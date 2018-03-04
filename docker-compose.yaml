@@ -1,0 +1,8 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+     - "80:80"
+  redis:
+    image: "php:7.2.2-apache-stretch"
