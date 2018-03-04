@@ -1,0 +1,1 @@
+These files are served by the Raspberry Pi in my bedroom at my primary residence. They include control panel pages that interact with the pingpong lights (see https://github.com/SpenceKonde/AzzyProjects/tree/master/Animate ) and in the future will also include additional utility pages. 
