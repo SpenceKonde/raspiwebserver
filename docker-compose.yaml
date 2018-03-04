@@ -1,7 +1,10 @@
-version: '3'
+version: "2" 
 services:
   web:
-    build: .
+    restart: always 
     ports:
      - "80:80"
-    image: "php:7.2.2-apache-stretch"
+    image: "arm32v7/php:7.2.2-apache-stretch"
+    volumes:
+     - "/home/pi/httpfiles/raspiwebserver/static:/var/www/html"
+ 
