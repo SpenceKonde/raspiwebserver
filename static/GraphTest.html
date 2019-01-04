@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    
+<script src="chartsjs/dist/Chart.min.js"></script>
+<div style="width: 1000px; height: 500px">
+<canvas id="myChart"></canvas>
+</div><div style="width: 1000px; height: 500px">
+<canvas id="myChart2"></canvas>
+</div>
+<script>
+	var serverAddress="192.168.2.16"
+    var historydata={Temp:-1,RH:-1,Pressure:-1,AirQual:-1,Clear:-1,Red:-1,Green:-1,Blue:-1};
+function processData(dataset) {
+   
+    LineChart1.data.datasets[0].data=dataset.RH;
+    LineChart1.data.datasets[1].data=dataset.Temp;
+    LineChart1.data.datasets[2].data=dataset.Pressure;
+    LineChart1.data.datasets[3].data=dataset.AirQual;
+    LineChart2.data.datasets[0].data=dataset.Clear;
+    LineChart2.data.datasets[1].data=dataset.Red;
+    LineChart2.data.datasets[2].data=dataset.Green;
+    LineChart2.data.datasets[3].data=dataset.Blue;
+    LineChart1.update();
+    LineChart2.update();
+}
+
+
+function updateChart() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+    		processData(JSON.parse(xhttp.responseText));
+		}
+	};
+	xhttp.open("GET", "http://"+serverAddress+"/history.json", true);
+	xhttp.send();
+}
+var labelList = ["0:00","0:30","1:00","1:30","2:00","2:30","3:00","3:30","4:00","4:30","5:00","5:30","6:00","6:30","7:00","7:30","8:00","8:30","9:00","9:30","10:00","10:30","11:00","11:30","12:00","12:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30","23:00","23:30","24:00"];
+
+function getLabels(offset){
+	var labels = labelList.slice();
+	while (offset) {
+    	var t=labels.shift();
+        labels.push(t);
+        offset--;
+	}
+	return labels;
+}
+
+var LineChart1 = new Chart("myChart", {
+    type: 'line',
+    data: {
+    	labels: ["24:00","23:30","23:00","22:30","22:00","21:30","21:00","20:30","20:00","19:30","19:00","18:30","18:00","17:30","17:00","16:30","16:00","15:30","15:00","14:30","14:00","13:30","13:00","12:30","12:00","11:30","11:00","10:30","10:00","9:30","9:00","8:30","8:00","7:30","7:00","6:30","6:00","5:30","5:00","4:30","4:00","3:30","3:00","2:30","2:00","1:30","1:00","0:30","0:00"],
+    	datasets:[{
+    		data:[30,35,37,39,34,32,25,29,31,33,44,43,42],
+    		label:"Indoor RH",
+    		yAxisID: 'humidity',
+    		fill: false,
+    		pointBorderColor: 'cyan',
+    		pointBackgroundColor:'cyan',
+    		borderColor: 'cyan'
+    	},{ 
+    		yAxisID: 'temperature',
+    		fill: false,
+    		pointBorderColor: 'orange',
+    		pointBackgroundColor:'orange',
+    		borderColor: 'orange',
+    		data:[30,35,37,39,34,32,25,29,31,33,44,43,42],
+    		label:"Indoor Temp"
+    	},{ 
+            yAxisID: 'pressure',
+            fill: false,
+            pointBorderColor: 'green',
+            pointBackgroundColor:'green',
+            borderColor: 'green',
+            data:[30,35,37,39,34,32,25,29,31,33,44,43,42],
+            label:"Pressure"
+        },{ 
+            yAxisID: 'airqual',
+            fill: false,
+            pointBorderColor: 'red',
+            pointBackgroundColor:'red',
+            borderColor: 'red',
+            data:[30,35,37,39,34,32,25,29,31,33,44,43,42],
+            label:"Air Quality"
+        }
+    	]},
+	options: {
+        scales: {
+            yAxes: [{
+                id: 'temperature',
+                type: 'linear',
+                position: 'right',
+                ticks: {
+                	min:10,
+                	max:40
+                },
+                scaleLabel: {
+        			display: true,
+        			labelString: "temperature (C)",
+        			fontColor: "red"
+      			}
+
+            }, {
+                id: 'humidity',
+                type: 'linear',
+                position: 'right',
+                ticks: {
+                	min:0,
+                	max:100
+                },
+                scaleLabel: {
+        			display: true,
+        			labelString: "Relative Humidity",
+        			fontColor: "blue"
+      			}
+            }, {
+                id: 'pressure',
+                type: 'linear',
+                position: 'right',
+                ticks: {
+                    min:900,
+                    max:1100
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "Pressure",
+                    fontColor: "green"
+                }
+            }, {
+                id: 'airqual',
+                type: 'linear',
+                position: 'right',
+                ticks: {
+                    min:40000,
+                    max:100000
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "Air Quality",
+                    fontColor: "red"
+                }
+            }]
+        }
+    }
+});
+
+var LineChart2 = new Chart("myChart2", {
+    type: 'line',
+    data: {
+        labels: ["24:00","23:30","23:00","22:30","22:00","21:30","21:00","20:30","20:00","19:30","19:00","18:30","18:00","17:30","17:00","16:30","16:00","15:30","15:00","14:30","14:00","13:30","13:00","12:30","12:00","11:30","11:00","10:30","10:00","9:30","9:00","8:30","8:00","7:30","7:00","6:30","6:00","5:30","5:00","4:30","4:00","3:30","3:00","2:30","2:00","1:30","1:00","0:30","0:00"],
+        datasets:[{
+            data:[30,35,37,39,34,32,25,29,31,33,44,43,42],
+            label:"Overall",
+            yAxisID: 'brightness',
+            fill: false,
+            pointBorderColor: 'grey',
+            pointBackgroundColor:'grey',
+            borderColor: 'grey'
+        },{ 
+            yAxisID: 'brightness',
+            fill: false,
+            pointBorderColor: 'red',
+            pointBackgroundColor:'red',
+            borderColor: 'red',
+            data:[30,35,37,39,34,32,25,29,31,33,44,43,42],
+            label:"Red"
+        },{ 
+            yAxisID: 'brightness',
+            fill: false,
+            pointBorderColor: 'green',
+            pointBackgroundColor:'green',
+            borderColor: 'green',
+            data:[30,35,37,39,34,32,25,29,31,33,44,43,42],
+            label:"Green"
+        },{ 
+            yAxisID: 'brightness',
+            fill: false,
+            pointBorderColor: 'blue',
+            pointBackgroundColor:'blue',
+            borderColor: 'blue',
+            data:[30,35,37,39,34,32,25,29,31,33,44,43,42],
+            label:"Blue"
+        }
+        ]},
+    options: {
+        scales: {
+            yAxes: [{
+                id: 'brightness',
+                type: 'logarithmic',
+                position: 'right',
+                ticks: {
+                    min:0,
+                    max:65535
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "Brightness",
+                    fontColor: "black"
+                }
+
+            }]
+        }
+    }
+});
+
+</script>
+<button onclick="updateChart()">Update</button>
+  </body>
+</html>

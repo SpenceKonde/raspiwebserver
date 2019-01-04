@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style type="text/css">
+    textarea {
+  white-space: pre;
+  word-wrap: normal;
+  overflow-x: scroll;
+}
+    </style>
+    <meta charset="utf-8">
+    <title>title</title>
+    <script type="text/javascript">
+    window.onload = onStart;
+    //var status={};
+    function onStart() {
+      getStatus();
+    }
+    function getStatus() {
+      //alert("Not yet implemented");
+      var xmlhttp = new XMLHttpRequest();
+      var url = "http://192.168.2.16/status.json";
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          console.log(xmlhttp.responseText)
+          var status = JSON.parse(xmlhttp.responseText);
+          updateSummary(status);
+        }
+      };
+      xmlhttp.open("GET", url, true);
+      xmlhttp.send();
+    }
+    function updateSummary(status) {
+      document.getElementById("tempcell").innerHTML=status.sensors.Temp+" C";
+      document.getElementById("humcell").innerHTML=status.sensors.RH+" %";
+      document.getElementById("prescell").innerHTML=status.sensors.Pressure+" mbar";
+      document.getElementById("aqcell").innerHTML=status.sensors["Air Quality"];
+      document.getElementById("clearcell").innerHTML=status.Light.clear;
+      document.getElementById("redcell").innerHTML=status.Light.red;
+      document.getElementById("greencell").innerHTML=status.Light.green;
+      document.getElementById("bluecell").innerHTML=status.Light.blue;
+      document.getElementById("lampblue").value=status.lamp.BLUE;
+      document.getElementById("lampcool").value=status.lamp.COOL;
+      document.getElementById("lampwarm").value=status.lamp.WARM;
+      document.getElementById("lampyellow").value=status.lamp.YELL;
+      document.getElementById("lampred").value=status.lamp["RED "];
+    }
+    function setLamp() {
+      var xmlhttp = new XMLHttpRequest();
+      var url = "http://192.168.2.16/lamp.cmd?";
+      url+="BLUE="+document.getElementById("lampblue").value;
+      url+="&COOL="+document.getElementById("lampcool").value;
+      url+="&WARM="+document.getElementById("lampwarm").value;
+      url+="&YELL="+document.getElementById("lampyellow").value;
+      url+="&RED="+document.getElementById("lampred").value;
+      console.log(url);
+      xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          console.log(xmlhttp.responseText)
+        }
+      };
+      xmlhttp.open("GET", url, true);
+      xmlhttp.send();
+    }
+    </script>
+  </head>
+  <body width="100%;">
+    <div><div width="50%;">
+    <table>
+    <tr>
+      <td>Current Status</td>
+      <td>Value</td>
+    </tr> 
+    <tr>
+      <td> Temperature </td>
+      <td id="tempcell"></td>
+    </tr>
+    <tr>
+      <td> Humidity </td>
+      <td id="humcell"></td>
+    </tr>
+    <tr>
+      <td> Pressure </td>
+      <td id="prescell"></td>
+    </tr>
+    <tr>
+      <td> Air Quality </td>
+      <td id="aqcell"></td>
+    </tr>
+    <tr>
+      <td> Light (clear) </td>
+      <td id="clearcell"></td>
+    </tr>
+    <tr>
+      <td> Light (red) </td>
+      <td id="redcell"></td>
+    </tr>
+    <tr>
+      <td> Light (green) </td>
+      <td id="greencell"></td>
+    </tr>
+    <tr>
+      <td> Light (blue) </td>
+      <td id="bluecell"></td>
+    </tr>
+    </table>
+  </div>
+  <div width="50%;">
+    <table> 
+      <tr>
+        <td>Color</td>
+        <td>Value</td>
+      </tr>
+      <tr>
+        <td>Ice Blue</td>
+        <td><input type='number' id="lampblue" min="0" max="1" step="0.05"/></td>
+      </tr>
+      <tr>
+        <td>Cool White</td>
+        <td><input type='number' id="lampcool" min="0" max="1" step="0.05"/></td>
+      </tr>
+      <tr>
+        <td>Warm White</td>
+        <td><input type='number' id="lampwarm" min="0" max="1" step="0.05"/></td>
+      </tr>
+      <tr>
+        <td>Yellow</td>
+        <td><input type='number' id="lampyellow" min="0" max="1" step="0.05"/></td>
+      </tr>
+      <tr>
+        <td>Red</td>
+        <td><input type='number' id="lampred" min="0" max="1" step="0.05"/></td>
+      </tr>
+    </table>
+    <button onclick="setLamp()">Set Lamp</button>
+
+  </div>
+    </div>
+    <button onclick="getStatus();">Update</button>
+  </body>
+</html>
+
