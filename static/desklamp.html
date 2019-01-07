@@ -7,9 +7,30 @@
   word-wrap: normal;
   overflow-x: scroll;
 }
+
+
+nav {
+  float: left;
+  width: 30%;
+  background: #FFF;
+  padding: 20px;
+}
+article {
+  float: left;
+  width: 30%;
+  background: #FFF;
+  padding: 20px;
+}
+header {
+  background-color: #666;
+  padding: 30px;
+  text-align: center;
+  font-size: 35px;
+  color: white;
+}
     </style>
     <meta charset="utf-8">
-    <title>title</title>
+    <title>Desk Lamp Control Panel</title>
     <script type="text/javascript">
     window.onload = onStart;
     //var status={};
@@ -65,10 +86,15 @@
     </script>
   </head>
   <body width="100%;">
-    <div><div width="50%;">
-    <table>
+<header> Desk Lamp Control Panel </header>
+    <div>
+      <nav>
+    <table border="1">
+      <tr>
+        <td colspan="2"><b>Sensor Status</b></td>
+      </tr>
     <tr>
-      <td>Current Status</td>
+      <td>Parameter</td>
       <td>Value</td>
     </tr> 
     <tr>
@@ -104,9 +130,13 @@
       <td id="bluecell"></td>
     </tr>
     </table>
-  </div>
-  <div width="50%;">
-    <table> 
+    <button onclick="getStatus();">Update</button>
+  </nav>
+  <article>
+    <table border="1"> 
+      <tr>
+        <td colspan="2"><b>Light Control</b></td>
+      </tr>
       <tr>
         <td>Color</td>
         <td>Value</td>
@@ -134,9 +164,8 @@
     </table>
     <button onclick="setLamp()">Set Lamp</button>
 
-  </div>
+  </article>
     </div>
-    <button onclick="getStatus();">Update</button>
   </body>
 </html>
 
