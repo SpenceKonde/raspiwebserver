@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 $server="192.168.2.14";
 $username="admin";
 $password="admin";
