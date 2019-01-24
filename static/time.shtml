@@ -1,0 +1,1 @@
+<!--#config timefmt="%b %d, %Y %T" --><!--#echo var="DATE_LOCAL" -->
